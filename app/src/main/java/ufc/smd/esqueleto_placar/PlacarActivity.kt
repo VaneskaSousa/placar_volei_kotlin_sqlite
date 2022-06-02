@@ -1,68 +1,100 @@
 package ufc.smd.esqueleto_placar
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
 
-import android.util.Log
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
-import androidx.core.content.getSystemService
-import data.Placar
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
-import java.nio.charset.StandardCharsets
+import data.VOLEI_POINT
+import data.VoleiConfig
+import data.VoleiJogo
+
 
 class PlacarActivity : AppCompatActivity() {
-    lateinit var placar:Placar
-    lateinit var tvResultadoJogo: TextView
-    var game =0
+    /// TEXT COMPONENTS
+    lateinit var etNomeTimeA : EditText
+    lateinit var etNomeTimeB : EditText
+    lateinit var setsTimeA : TextView
+    lateinit var setsTimeB : TextView
+    lateinit var btPontoTimeA : Button
+    lateinit var btPontoTimeB : Button
+    lateinit var tvGanhador : TextView
+
+    /// VOLEI CONFIG
+    lateinit var voleiConfig : VoleiConfig
+    lateinit var voleiJogo : VoleiJogo
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_placar)
-        placar= getIntent().getExtras()?.getSerializable("placar") as Placar
-        tvResultadoJogo= findViewById(R.id.tvPlacar)
-        //Mudar o nome da partida
+
+        // Resgatando configurações da Activity anterior
+        voleiConfig = getIntent().getExtras()?.getSerializable("voleiConfig") as VoleiConfig
+        voleiJogo = VoleiJogo(voleiConfig.nomePartida, voleiConfig.comTemporizador, voleiConfig.pontosPorSet, voleiConfig.qtdSetParaGanhar)
+
+        // Referencia dos componentes
+        etNomeTimeA = findViewById(R.id.etTimeA)
+        etNomeTimeB = findViewById(R.id.etTimeB)
+        setsTimeA = findViewById(R.id.tvSetTimeA)
+        setsTimeB = findViewById(R.id.tvSetTimeB)
+        btPontoTimeA = findViewById(R.id.btPontoTimeA)
+        btPontoTimeB = findViewById(R.id.btPontoTimeB)
+        tvGanhador = findViewById(R.id.tvGanhadorFim)
+
+        // Setando nome da partida
         val tvNomePartida=findViewById(R.id.tvNomePartida2) as TextView
-        tvNomePartida.text=placar.nome_partida
-        ultimoJogos()
+        tvNomePartida.text = voleiConfig.nomePartida
+
+        etNomeTimeA.setText(voleiJogo.voleiPlacar.NomeTimeA)
+        etNomeTimeB.setText(voleiJogo.voleiPlacar.NomeTimeB)
+        atualizarSets()
+        atualizarPlacar()
     }
 
-    fun alteraPlacar (v:View){
-        game++
-        if ((game % 2) != 0) {
-            placar.resultado = ""+game+" vs "+ (game-1)
-        }else{
-            placar.resultado = ""+(game-1)+" vs "+ (game-1)
-            vibrar(v)
+    fun adicionarPontoTimeA(v : View){ voleiState(voleiJogo.pontoTimeA()) }
+    fun adicionarPontoTimeB(v : View){ voleiState(voleiJogo.pontoTimeB()) }
+    fun voleiState(volei_point : VOLEI_POINT){
+        when(volei_point){
+            VOLEI_POINT.NORMAL_POINT -> atualizarPlacar()
+            VOLEI_POINT.SET_POINT -> {
+                atualizarPlacar()
+                atualizarSets()
+            }
+            VOLEI_POINT.GAME_POINT -> {
+                atualizarPlacar()
+                atualizarSets()
+                finalizarJogo()
+            }
         }
-        tvResultadoJogo.text=placar.resultado
     }
 
+    fun atualizarPlacar(){
+        btPontoTimeA.text = voleiJogo.voleiPlacar.placarTimeA.toString()
+        btPontoTimeB.text = voleiJogo.voleiPlacar.placarTimeB.toString()
+    }
+    fun atualizarSets(){
+        setsTimeA.text = "Sets: " + voleiJogo.voleiPlacar.setsTimeA.toString()
+        setsTimeB.text = "Sets: " + voleiJogo.voleiPlacar.setsTimeB.toString()
+    }
+    fun finalizarJogo(){
+        var ganhadorString = voleiJogo.getGanhadorString()
 
-    fun vibrar (v:View){
-        val buzzer = this.getSystemService<Vibrator>()
-         val pattern = longArrayOf(0, 200, 100, 300)
-         buzzer?.let {
-             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                 buzzer.vibrate(VibrationEffect.createWaveform(pattern, -1))
-             } else {
-                 //deprecated in API 26
-                 buzzer.vibrate(pattern, -1)
-             }
-         }
+        if(ganhadorString == "EMPATE"){
+            tvGanhador.text = ganhadorString;
+        }
+        else
+            tvGanhador.text = ganhadorString + " VENCEU!!!"
 
+        btPontoTimeA.isEnabled = false
+        btPontoTimeB.isEnabled = false
     }
 
+    fun modificarNomeTimeA(v : View){}
+    fun modificarNomeTimeB(v : View){}
 
+/*
     fun saveGame(v: View) {
 
         val sharedFilename = "PreviousGames"
@@ -95,9 +127,6 @@ class PlacarActivity : AppCompatActivity() {
         }
     }
 
-
-
-
     fun ultimoJogos () {
         val sharedFilename = "PreviousGames"
         val sp:SharedPreferences = getSharedPreferences(sharedFilename,Context.MODE_PRIVATE)
@@ -111,4 +140,5 @@ class PlacarActivity : AppCompatActivity() {
         }
 
     }
+*/
 }
