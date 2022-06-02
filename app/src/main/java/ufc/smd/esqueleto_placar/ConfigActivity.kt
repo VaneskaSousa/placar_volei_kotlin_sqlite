@@ -8,16 +8,41 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.Switch
+import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doAfterTextChanged
 import data.VoleiConfig
 
 class ConfigActivity : AppCompatActivity() {
 
     var voleiConfig : VoleiConfig = VoleiConfig("Nome da Partida", false)
+    lateinit var etPoints : EditText
+    lateinit var etSets : EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_config)
 
+        etPoints = findViewById<EditText>(R.id.etPontosPorSet)
+        etSets = findViewById<EditText>(R.id.etSets)
+
+        etPoints.doAfterTextChanged { text ->
+            var amount = text.toString()
+            if(amount != "" && amount.toInt() <= 0)
+                etPoints.setText("1")
+        }
+        etPoints.setOnFocusChangeListener { view, b ->
+            if(etPoints.text.toString() == "")
+                etPoints.setText("1")
+        }
+        etSets.doAfterTextChanged{ text ->
+            var amount = text.toString()
+            if(amount != "" && amount.toInt() <= 0)
+                etSets.setText("1")
+        }
+        etSets.setOnFocusChangeListener { view, b ->
+            if(etSets.text.toString() == "")
+                etSets.setText("1")
+        }
         openConfig()
         initInterface()
     }
@@ -56,6 +81,8 @@ class ConfigActivity : AppCompatActivity() {
         voleiConfig.qtdSetParaGanhar = etSets.text.toString().toInt()
     }
     fun openPlacar(v: View){ //Executa ao click do Iniciar Jogo
+
+
         updatePlacarConfig() //Pega da Interface e joga no placar
         saveConfig() //Salva no Shared preferences
 

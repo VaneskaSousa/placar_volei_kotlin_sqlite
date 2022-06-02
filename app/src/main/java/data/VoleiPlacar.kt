@@ -1,6 +1,13 @@
 package data
 import java.io.Serializable
 
+enum class VOLEI_POINT {
+    NULL_POINT,
+    NORMAL_POINT,
+    SET_POINT,
+    GAME_POINT,
+}
+
 data class VoleiConfig (
     var nomePartida : String,
     var comTemporizador: Boolean,
@@ -20,20 +27,22 @@ data class VoleiPlacar (
     var com_temporizador : Boolean
 ):Serializable
 
-enum class VOLEI_POINT {
-    NULL_POINT,
-    NORMAL_POINT,
-    SET_POINT,
-    GAME_POINT,
-}
-
+data class VoleiPlacarUndo(
+    val pointTimeA : Int,
+    val pointTimeB : Int,
+    val setTimeA : Int,
+    val SetTimeB : Int
+)
 
 class VoleiJogo (var nomePartida : String, var temporizador : Boolean, var pontuacaoMinimaGanharSet : Int = 25, var quantidadeDeSetsParaGanharJogo : Int = 3){
     var voleiPlacar = VoleiPlacar(nomePartida,"Time A", "Time B", 0, 0, 0, 0, "", temporizador)
+    var undo : MutableList<VoleiPlacarUndo> = mutableListOf()
     var jogoFinalizado = false
 
     fun pontoTimeA() : VOLEI_POINT{
         if(jogoFinalizado) return VOLEI_POINT.NULL_POINT
+
+        undo.add(VoleiPlacarUndo(voleiPlacar.placarTimeA, voleiPlacar.placarTimeB, voleiPlacar.setsTimeA, voleiPlacar.setsTimeB))
 
         if(++voleiPlacar.placarTimeA >= pontuacaoMinimaGanharSet && checarDiferencaPlacarMaiorQueDois()){
             if(++voleiPlacar.setsTimeA >= quantidadeDeSetsParaGanharJogo){
@@ -51,6 +60,8 @@ class VoleiJogo (var nomePartida : String, var temporizador : Boolean, var pontu
 
     fun pontoTimeB() : VOLEI_POINT{
         if(jogoFinalizado) return VOLEI_POINT.NULL_POINT
+
+        undo.add(VoleiPlacarUndo(voleiPlacar.placarTimeA, voleiPlacar.placarTimeB, voleiPlacar.setsTimeA, voleiPlacar.setsTimeB))
 
         if(++voleiPlacar.placarTimeB >= pontuacaoMinimaGanharSet && checarDiferencaPlacarMaiorQueDois()) {
             if(++voleiPlacar.setsTimeB >= quantidadeDeSetsParaGanharJogo){
@@ -90,5 +101,18 @@ class VoleiJogo (var nomePartida : String, var temporizador : Boolean, var pontu
         }
 
         return "EMPATADO"
+    }
+
+    fun voltarAcao(){
+        if(undo.isEmpty())
+            return
+
+        var placarData = undo.get(undo.lastIndex)
+        undo.removeLast()
+
+        voleiPlacar.placarTimeA = placarData.pointTimeA
+        voleiPlacar.placarTimeB = placarData.pointTimeB
+        voleiPlacar.setsTimeA = placarData.setTimeA
+        voleiPlacar.setsTimeB = placarData.SetTimeB
     }
 }
