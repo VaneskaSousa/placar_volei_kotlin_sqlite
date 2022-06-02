@@ -36,6 +36,7 @@ class PlacarActivity : AppCompatActivity() {
     lateinit var ibtUndo : ImageButton
     lateinit var btPontoTimeA : Button
     lateinit var btPontoTimeB : Button
+    lateinit var btSave : Button
 
     /// VOLEI CONFIG
     lateinit var voleiConfig : VoleiConfig
@@ -58,6 +59,7 @@ class PlacarActivity : AppCompatActivity() {
         btPontoTimeB = findViewById(R.id.btPontoTimeB)
         tvGanhador = findViewById(R.id.tvGanhadorFim)
         ibtUndo = findViewById(R.id.ibtUndo)
+        btSave = findViewById(R.id.btSalvarPlacar)
 
         // Quando nome mudar, atualizar o voleiPlacar
         etNomeTimeA.doAfterTextChanged { text ->
@@ -72,6 +74,7 @@ class PlacarActivity : AppCompatActivity() {
         tvNomePartida.text = voleiConfig.nomePartida
 
         // Iniciando a tela de placar com informações do jogo
+        btSave.isEnabled = false
         etNomeTimeA.setText(voleiJogo.voleiPlacar.NomeTimeA)
         etNomeTimeB.setText(voleiJogo.voleiPlacar.NomeTimeB)
         atualizarSets()
@@ -118,6 +121,7 @@ class PlacarActivity : AppCompatActivity() {
         btPontoTimeB.isEnabled = false
         etNomeTimeA.isEnabled = false
         etNomeTimeB.isEnabled = false
+        btSave.isEnabled = true
     }
 
     fun undo(v: View){
@@ -139,13 +143,15 @@ class PlacarActivity : AppCompatActivity() {
     }
 
     fun saveGame(v: View) {
+        btSave.isEnabled = false
 
         val sharedFilename = "PreviousGames"
         val sp: SharedPreferences = getSharedPreferences(sharedFilename, Context.MODE_PRIVATE)
         var edShared = sp.edit()
 
         //Salvar o número de jogos já armazenados
-        edShared.putInt("numberMatch", 1)
+        var quantidadePartidas = sp.getInt("quantidadePartidas", 0) + 1
+        edShared.putInt("quantidadePartidas", quantidadePartidas)
 
         //Escrita em Bytes de Um objeto Serializável
         var dt= ByteArrayOutputStream()
@@ -153,7 +159,7 @@ class PlacarActivity : AppCompatActivity() {
         oos.writeObject(voleiJogo.voleiPlacar);
 
         //Salvar como "match1"
-        edShared.putString("match1", dt.toString(StandardCharsets.ISO_8859_1.name()))
+        edShared.putString("match" + quantidadePartidas.toString(), dt.toString(StandardCharsets.ISO_8859_1.name()))
         edShared.commit()
 
     }

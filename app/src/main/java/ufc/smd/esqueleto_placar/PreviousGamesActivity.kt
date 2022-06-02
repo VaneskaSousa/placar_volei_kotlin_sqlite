@@ -1,12 +1,16 @@
 package ufc.smd.esqueleto_placar
 
 import adapters.CustomAdapter
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import data.Placar
-import java.text.SimpleDateFormat
+import data.VoleiPlacar
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.ObjectInputStream
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -22,20 +26,26 @@ class PreviousGamesActivity : AppCompatActivity() {
         recyclerview.layoutManager = LinearLayoutManager(this)
 
         // O ArrayList de Placares
-        val data = ArrayList<Placar>()
+        val data = ArrayList<VoleiPlacar>()
 
        // val date = Calendar.getInstance().time
        // var dateTimeFormat = SimpleDateFormat("dd/MM/yy HH:mm:ss", Locale.getDefault())
        // val data_hora = dateTimeFormat.format(date)
 
+        val sharedFilename = "PreviousGames"
+        val sp: SharedPreferences = getSharedPreferences(sharedFilename, Context.MODE_PRIVATE)
+        var quantidadePartidas = sp.getInt("quantidadePartidas", 0)
 
-
-        //Criando 10 Placares
-        for (i in 1..10) {
-            val date = Calendar.getInstance().time
-            var dateTimeFormat = SimpleDateFormat("dd/MM/yy HH:mm:ss", Locale.getDefault())
-            val data_hora = dateTimeFormat.format(date)
-            data.add(Placar("Jogo "+i,""+i+"x"+i," O jogo foi 4x4 em "+data_hora+"h",true))
+        if(quantidadePartidas > 0) {
+            for (i in 1..quantidadePartidas) {
+                var _data = sp.getString("match" + i.toString(), "").toString()
+                if(_data != "") {
+                    var dis = ByteArrayInputStream(_data.toByteArray(Charsets.ISO_8859_1))
+                    var oos = ObjectInputStream(dis)
+                    var voleiPlacar : VoleiPlacar = oos.readObject() as VoleiPlacar
+                    data.add(voleiPlacar)
+                }
+            }
         }
 
         // ArrayList enviado ao Adapter
@@ -43,6 +53,5 @@ class PreviousGamesActivity : AppCompatActivity() {
 
         // Setando o Adapter no Recyclerview
         recyclerview.adapter = adapter
-
     }
 }

@@ -12,9 +12,10 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import data.Placar
+import data.VoleiPlacar
 import ufc.smd.esqueleto_placar.R
 
-class CustomAdapter(private val mList: List<Placar>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
+class CustomAdapter(private val mList: ArrayList<VoleiPlacar>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
 
     // Criação de Novos ViewHolders
@@ -39,17 +40,22 @@ class CustomAdapter(private val mList: List<Placar>) : RecyclerView.Adapter<Cust
         val placarAnterior = mList[position]
 
         //alimentando os elementos a partir do objeto placar
-        holder.tvNomePartida.text = placarAnterior.nome_partida
-        holder.tvResultadoJogo.text = placarAnterior.resultado
-
+        holder.tvNomePartida.text = placarAnterior.NomePartida
+        holder.tvResultadoJogo.text =
+            placarAnterior.NomeTimeA + " " +
+            placarAnterior.setsTimeA + " x " +
+            placarAnterior.setsTimeB + " " +
+            placarAnterior.NomeTimeB
+        /*
         holder.lnCell.setOnClickListener{
             val duration= Snackbar.LENGTH_LONG
-            val text= placarAnterior.resultadoLongo
+            val text = 0
 
             val snack= Snackbar.make(holder.lnCell,text,duration)
             snack.show()
 
         }
+        */
     }
 
     // return the number of the items in the list
