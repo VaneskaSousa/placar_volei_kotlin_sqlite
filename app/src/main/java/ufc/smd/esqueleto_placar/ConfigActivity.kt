@@ -14,24 +14,27 @@ import data.VoleiConfig
 
 class ConfigActivity : AppCompatActivity() {
 
-    var voleiConfig : VoleiConfig = VoleiConfig("Nome da Partida", false)
+    var voleiConfig : VoleiConfig = VoleiConfig("Nome", false)
     lateinit var etPoints : EditText
     lateinit var etSets : EditText
-
+    lateinit var etNameTimeA : EditText
+    lateinit var etNameTimeB : EditText
+    lateinit var etNomePartida : EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_config)
 
+        /// GET REFERENCES FROM VIEW
         etPoints = findViewById<EditText>(R.id.etPontosPorSet)
         etSets = findViewById<EditText>(R.id.etSets)
+        etNameTimeA = findViewById<EditText>(R.id.editTextGameName2)
+        etNameTimeB = findViewById<EditText>(R.id.editTextGameName3)
+        etNomePartida = findViewById<EditText>(R.id.editTextGameName)
 
+        /// SETUP BEHAVIORS
         etPoints.doAfterTextChanged { text ->
             var amount = text.toString()
             if(amount != "" && amount.toInt() <= 0)
-                etPoints.setText("1")
-        }
-        etPoints.setOnFocusChangeListener { view, b ->
-            if(etPoints.text.toString() == "")
                 etPoints.setText("1")
         }
         etSets.doAfterTextChanged{ text ->
@@ -39,23 +42,38 @@ class ConfigActivity : AppCompatActivity() {
             if(amount != "" && amount.toInt() <= 0)
                 etSets.setText("1")
         }
+        etPoints.setOnFocusChangeListener { view, b ->
+            if(etPoints.text.toString() == "")
+                etPoints.setText("1")
+        }
         etSets.setOnFocusChangeListener { view, b ->
             if(etSets.text.toString() == "")
                 etSets.setText("1")
         }
+        etNameTimeA.setOnFocusChangeListener { view, b ->
+            if(etNameTimeA.text.toString() == "")
+                etNameTimeA.setText("Time A")
+        }
+        etNameTimeB.setOnFocusChangeListener { view, b ->
+            if(etNameTimeB.text.toString() == "")
+                etNameTimeB.setText("Time A")
+        }
+        etNomePartida.setText(voleiConfig.nomePartida)
+
         openConfig()
-        initInterface()
     }
     fun saveConfig(){
         val sharedFilename = "configPlacar"
         val sp:SharedPreferences = getSharedPreferences(sharedFilename,Context.MODE_PRIVATE)
         var edShared = sp.edit()
 
-
         edShared.putString("nomePartida",voleiConfig.nomePartida)
         edShared.putBoolean("comTemporizador",voleiConfig.comTemporizador)
         edShared.putInt("pontos", voleiConfig.pontosPorSet)
         edShared.putInt("sets", voleiConfig.qtdSetParaGanhar)
+        edShared.putString("nomeTimeA", voleiConfig.nomeTimeA)
+        edShared.putString("nomeTimeB", voleiConfig.nomeTimeB)
+
         edShared.commit()
     }
     fun openConfig() {
@@ -66,23 +84,15 @@ class ConfigActivity : AppCompatActivity() {
         voleiConfig.pontosPorSet = sp.getInt("pontos", voleiConfig.pontosPorSet)
         voleiConfig.qtdSetParaGanhar = sp.getInt("sets", voleiConfig.qtdSetParaGanhar)
     }
-    fun initInterface(){
-        val tv= findViewById<EditText>(R.id.editTextGameName)
-        tv.setText(voleiConfig.nomePartida)
-    }
     fun updatePlacarConfig(){
-        val tv= findViewById<EditText>(R.id.editTextGameName)
-        voleiConfig.nomePartida = tv.text.toString()
-
-        val  tePoints = findViewById<EditText>(R.id.etPontosPorSet)
-        voleiConfig.pontosPorSet = tePoints.text.toString().toInt()
-
-        val etSets = findViewById<EditText>(R.id.etSets)
+        voleiConfig.nomePartida = etNomePartida.text.toString()
+        voleiConfig.pontosPorSet = etPoints.text.toString().toInt()
         voleiConfig.qtdSetParaGanhar = etSets.text.toString().toInt()
+        voleiConfig.nomeTimeA = etNameTimeA.text.toString()
+        voleiConfig.nomeTimeB = etNameTimeB.text.toString()
+        voleiConfig.dataInicioJogo = System.currentTimeMillis()
     }
     fun openPlacar(v: View){ //Executa ao click do Iniciar Jogo
-
-
         updatePlacarConfig() //Pega da Interface e joga no placar
         saveConfig() //Salva no Shared preferences
 

@@ -11,8 +11,12 @@ enum class VOLEI_POINT {
 data class VoleiConfig (
     var nomePartida : String,
     var comTemporizador: Boolean,
+    var nomeTimeA : String = "Time A",
+    var nomeTimeB : String = "Time B",
     var pontosPorSet : Int = 25,
     var qtdSetParaGanhar : Int = 3,
+    var dataInicioJogo : Long = 0
+
 ) : Serializable
 
 data class VoleiPlacar (
@@ -24,7 +28,8 @@ data class VoleiPlacar (
     var setsTimeA : Int,
     var setsTimeB : Int,
     var tempoDeJogo : String,
-    var com_temporizador : Boolean
+    var com_temporizador : Boolean,
+    var dataJogo : Long,
 ):Serializable
 
 data class VoleiPlacarUndo(
@@ -35,7 +40,7 @@ data class VoleiPlacarUndo(
 )
 
 class VoleiJogo (var nomePartida : String, var temporizador : Boolean, var pontuacaoMinimaGanharSet : Int = 25, var quantidadeDeSetsParaGanharJogo : Int = 3){
-    var voleiPlacar = VoleiPlacar(nomePartida,"Time A", "Time B", 0, 0, 0, 0, "", temporizador)
+    var voleiPlacar = VoleiPlacar(nomePartida,"Time A", "Time B", 0, 0, 0, 0, "", temporizador, 0)
     var undo : MutableList<VoleiPlacarUndo> = mutableListOf()
     var jogoFinalizado = false
 

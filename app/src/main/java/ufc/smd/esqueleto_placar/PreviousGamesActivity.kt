@@ -37,8 +37,8 @@ class PreviousGamesActivity : AppCompatActivity() {
         var quantidadePartidas = sp.getInt("quantidadePartidas", 0)
 
         if(quantidadePartidas > 0) {
-            for (i in 1..quantidadePartidas) {
-                var _data = sp.getString("match" + i.toString(), "").toString()
+            for (i in 0..quantidadePartidas) {
+                var _data = sp.getString("match" + (quantidadePartidas - i).toString(), "").toString()
                 if(_data != "") {
                     var dis = ByteArrayInputStream(_data.toByteArray(Charsets.ISO_8859_1))
                     var oos = ObjectInputStream(dis)
