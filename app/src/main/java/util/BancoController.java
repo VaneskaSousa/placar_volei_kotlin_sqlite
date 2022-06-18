@@ -15,6 +15,8 @@ public class BancoController {
     public String insereDados(String nome_partida, String nome_time_A, String nome_time_B, int pontos_por_set,
                              int total_time_a, int total_time_b, String vencedor){
 
+        System.out.println("cheguei no insereDados");
+
         String mensagem = "vazio";
 
         ContentValues valores;
@@ -35,7 +37,7 @@ public class BancoController {
         db.close();
 
         if (resultado ==-1) {
-            mensagem = "Erro ao inserir registro";
+            mensagem = "Erro ao inserir registro "+resultado;
         }else {
             mensagem = "Dados cadastrado com sucesso";
         }

@@ -173,7 +173,10 @@ class PlacarActivity : AppCompatActivity() {
         edShared.putString("match" + quantidadePartidas.toString(), dt.toString(StandardCharsets.ISO_8859_1.name()))
         edShared.commit()
 
-        /* SAVE GAME - SQLITE */
+        /*
+        * SAVE GAME - SQLITE
+        * 18/06 - Vaneska Sousa - O envio dos dados está dando erro, está retornando -1
+        */
 
         val crud = BancoController(baseContext)
         var resultado = "";
