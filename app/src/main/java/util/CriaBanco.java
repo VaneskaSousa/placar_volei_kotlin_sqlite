@@ -9,27 +9,26 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class CriaBanco extends SQLiteOpenHelper {
-
     /*
      * Aqui você cria as constantes sobre o banco de dados, como nome, tabela, id e versão.
      * O construtor CriaBanco irá criar o banco automaticamente com os dados passados
      */
-    private static final String NOME_BANCO = "banco.db";
-    private static final String TABELA = "partida";
-    private static final String ID = "_id";
-    private static final Integer VERSAO = 1;
+    public static final String NOME_BANCO = "banco.db";
+    public static final String TABELA = "partida";
+    public static final String ID = "_id";
+    public static final Integer VERSAO = 1;
 
     /*
      * Essa parte é opcional, a ideia aqui é voce criar o nome das colunas, afim de so mudar o nome depois
      * porem voce pode colocar esses dados direto no codigo dentro do metodo onCreate
      */
-    private static final String COLUNA_1 = "nome_partida";
-    private static final String COLUNA_2 = "nome_time_A";
-    private static final String COLUNA_3 = "nome_time_B";
-    private static final String COLUNA_4 = "pontos_por_set";
-    private static final String COLUNA_5 = "total_time_a";
-    private static final String COLUNA_6 = "total_time_a";
-    private static final String COLUNA_7 = "time 01";
+    public static final String COLUNA_1 = "nome_partida";
+    public static final String COLUNA_2 = "nome_time_A";
+    public static final String COLUNA_3 = "nome_time_B";
+    public static final String COLUNA_4 = "pontos_por_set";
+    public static final String COLUNA_5 = "total_time_a";
+    public static final String COLUNA_6 = "total_time_b";
+    public static final String COLUNA_7 = "vencedor";
 
 
     public CriaBanco(Context context){
