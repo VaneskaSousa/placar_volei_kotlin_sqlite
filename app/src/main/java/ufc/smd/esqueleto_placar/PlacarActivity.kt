@@ -3,18 +3,14 @@ package ufc.smd.esqueleto_placar
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.*
-import androidx.appcompat.app.AppCompatActivity
-
 import android.view.View
-import android.widget.Button
-import android.widget.Chronometer
-import android.widget.ImageButton
-import android.widget.TextView
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
-import androidx.core.widget.doAfterTextChanged
 import data.VOLEI_POINT
 import data.VoleiConfig
 import data.VoleiJogo
+import util.BancoController
 import java.io.ByteArrayOutputStream
 import java.io.ObjectOutputStream
 import java.nio.charset.StandardCharsets
@@ -121,9 +117,11 @@ class PlacarActivity : AppCompatActivity() {
 
         if(ganhadorString == "EMPATE"){
             tvGanhador.text = ganhadorString;
-        }
-        else
+        } else {
             tvGanhador.text = ganhadorString + " VENCEU!!!"
+        }
+
+
 
         btSave.isEnabled = true
 
@@ -174,6 +172,15 @@ class PlacarActivity : AppCompatActivity() {
         //Salvar como "match1"
         edShared.putString("match" + quantidadePartidas.toString(), dt.toString(StandardCharsets.ISO_8859_1.name()))
         edShared.commit()
+
+        /* SAVE GAME - SQLITE */
+
+        val crud = BancoController(baseContext)
+        var resultado = "";
+        resultado = crud.insereDados(voleiConfig.nomePartida, voleiConfig.nomeTimeA, voleiConfig.nomeTimeB,
+            voleiConfig.pontosPorSet, voleiJogo.pontoTimeA().ordinal, voleiJogo.pontoTimeB().ordinal, voleiJogo.getGanhadorString());
+
+        Toast.makeText(getApplicationContext(), resultado, Toast.LENGTH_LONG).show();
 
     }
 

@@ -51,6 +51,8 @@ class PreviousGamesActivity : AppCompatActivity() {
         // ArrayList enviado ao Adapter
         val adapter = CustomAdapter(data)
 
+
+
         // Setando o Adapter no Recyclerview
         recyclerview.adapter = adapter
     }
