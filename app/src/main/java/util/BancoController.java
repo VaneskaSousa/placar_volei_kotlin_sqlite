@@ -13,7 +13,7 @@ public class BancoController {
     }
 
     public String insereDados(String nome_partida, String nome_time_A, String nome_time_B, int pontos_por_set,
-                             int total_time_a, int total_time_b, String vencedor){
+                             int num_sets, String vencedor){
         String mensagem = "vazio";
 
         try{
@@ -27,9 +27,8 @@ public class BancoController {
             valores.put(CriaBanco.COLUNA_2, nome_time_A);
             valores.put(CriaBanco.COLUNA_3, nome_time_B);
             valores.put(CriaBanco.COLUNA_4, pontos_por_set);
-            valores.put(CriaBanco.COLUNA_5, total_time_a);
-            valores.put(CriaBanco.COLUNA_6, total_time_b);
-            valores.put(CriaBanco.COLUNA_7, vencedor);
+            valores.put(CriaBanco.COLUNA_5, num_sets);
+            valores.put(CriaBanco.COLUNA_6, vencedor);
 
             resultado = db.insert(CriaBanco.TABELA, null, valores);
             db.close();

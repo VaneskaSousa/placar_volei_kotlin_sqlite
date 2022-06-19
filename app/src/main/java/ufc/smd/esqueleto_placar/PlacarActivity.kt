@@ -177,11 +177,12 @@ class PlacarActivity : AppCompatActivity() {
         * SAVE GAME - SQLITE
         * 18/06 - Vaneska Sousa - O envio dos dados está dando erro, está retornando -1
         */
+        println("pontos por set: "+voleiConfig.pontosPorSet)
 
         val crud = BancoController(baseContext)
         var resultado = "";
         resultado = crud.insereDados(voleiConfig.nomePartida, voleiConfig.nomeTimeA, voleiConfig.nomeTimeB,
-            voleiConfig.pontosPorSet, voleiJogo.pontoTimeA().ordinal, voleiJogo.pontoTimeB().ordinal, voleiJogo.getGanhadorString());
+            voleiConfig.pontosPorSet, voleiJogo.quantidadeDeSetsParaGanharJogo, voleiJogo.getGanhadorString());
 
         Toast.makeText(getApplicationContext(), resultado, Toast.LENGTH_LONG).show();
 

@@ -16,7 +16,7 @@ public class CriaBanco extends SQLiteOpenHelper {
      * Aqui você cria as constantes sobre o banco de dados, como nome, tabela, id e versão.
      * O construtor CriaBanco irá criar o banco automaticamente com os dados passados
      */
-    public static final String NOME_BANCO = "bancoTeste3.db";
+    public static final String NOME_BANCO = "placar_volei.db";
     public static final String TABELA = "partida";
     public static final String ID = "_id";
     public static final Integer VERSAO = 1;
@@ -29,9 +29,8 @@ public class CriaBanco extends SQLiteOpenHelper {
     public static final String COLUNA_2 = "nome_time_A";
     public static final String COLUNA_3 = "nome_time_B";
     public static final String COLUNA_4 = "pontos_por_set";
-    public static final String COLUNA_5 = "total_time_a";
-    public static final String COLUNA_6 = "total_time_b";
-    public static final String COLUNA_7 = "vencedor";
+    public static final String COLUNA_5 = "num_sets";
+    public static final String COLUNA_6 = "vencedor";
 
 
     public CriaBanco(Context context){
@@ -48,8 +47,7 @@ public class CriaBanco extends SQLiteOpenHelper {
                     + COLUNA_3 + " TEXT,"
                     + COLUNA_4 + " INTEGER,"
                     + COLUNA_5 + " INTEGER,"
-                    + COLUNA_6 + " INTEGER,"
-                    + COLUNA_7 + " text"
+                    + COLUNA_6 + " text"
                     +")";
 
             db.execSQL(sql);
