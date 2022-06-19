@@ -174,8 +174,7 @@ class PlacarActivity : AppCompatActivity() {
         edShared.commit()
 
         /*
-        * SAVE GAME - SQLITE
-        * 18/06 - Vaneska Sousa - O envio dos dados está dando erro, está retornando -1
+        * SAVE GAME - SQLITE by: Vaneska Sousa
         */
         println("pontos por set: "+voleiConfig.pontosPorSet)
 
